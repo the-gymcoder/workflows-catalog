@@ -57,7 +57,7 @@ jobs:
       - name: Login to dockerhub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Execute make targets to build and push docker image
@@ -66,6 +66,7 @@ jobs:
             IMAGE=$(TAG=$TAG make -sC ${{ inputs.PROJECT_NAME }} image)
             echo "IMAGE=$IMAGE" | tee -a $GITHUB_ENV
             TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} build
+            docker image ls "$IMAGE"
             TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} publish
 
       - name: Verify docker image
