@@ -1,0 +1,42 @@
+name: Deploy microservice/project
+on:
+  workflow_call:
+    inputs:
+      DOCKER_COMPOSE_FILE:
+        description: "docker-compose file to be copied to container."
+        type: string
+      REF:
+        description: "branch, tag, or commit SHA from which the project should be build."
+        type: string
+
+jobs:
+  docker-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check input REF
+        run: |
+            if [ -z "${{ inputs.REF }}" ]; then
+              echo "BRANCH=master" >> $GITHUB_ENV
+            else
+              echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
+            fi
+
+      - name: To prove myself
+        run: |
+            echo "BRANCH:$BRANCH"
+            echo "input REF: ${{ inputs.REF }}"
+            echo "BRANCH:$BRANCH"
+            echo "BRANCH:${{env.BRANCH}}"
+      
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: "${{env.BRANCH}}"
+
+      - name: Deploy application
+        run: |
+            echo "deploy application"
+            echo "copy docker compose file"
+            echo "docker-compose down and docker-compose up -d"

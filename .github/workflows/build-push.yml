@@ -1,0 +1,76 @@
+name: Microservice build project
+on:
+  workflow_call:
+    inputs:
+      PROJECT_NAME:
+        description: "project to build docker image and push."
+        type: string
+        required: true
+      REF:
+        description: "branch, tag, or commit SHA from which the project should be build."
+        type: string
+    secrets:
+      ARTIFACTORY_USERNAME:
+        required: true
+      ARTIFACTORY_PASSWORD:
+        required: true
+
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-latest
+
+    outputs:
+      IMAGE: ${{ steps.build.outputs.IMAGE }}
+
+    steps:
+      - name: Check input REF
+        run: |
+            if [ -z "${{ inputs.REF }}" ]; then
+              echo "BRANCH=master" >> $GITHUB_ENV
+            else
+              echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
+            fi
+
+      - name: To prove myself
+        run: |
+            echo "BRANCH:$BRANCH"
+            echo "input REF: ${{ inputs.REF }}"
+            echo "BRANCH:$BRANCH"
+            echo "BRANCH:${{env.BRANCH}}"
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: "${{env.BRANCH}}"
+
+      - name: Login to docker.artifactory.bc.edu
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Execute make targets to build and push docker image
+        id: build
+        run: |
+            IMAGE=$(make -sC ${{ inputs.PROJECT_NAME }} image)
+            echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+            make -C ${{ inputs.PROJECT_NAME }} build
+            make -C ${{ inputs.PROJECT_NAME }} publish
+
+      - name: Verify docker image
+        run: |
+            echo "IMAGE is $IMAGE"
+            docker image rm "$IMAGE"
+            docker pull "$IMAGE"
+            docker image ls "$IMAGE"
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: "${{env.IMAGE}}"
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true
