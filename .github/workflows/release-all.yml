@@ -1,0 +1,100 @@
+name: EagleApps release all
+on:
+  workflow_call:
+    inputs:
+      REF:
+        type: string
+        required: true
+        description: "branch"
+      TAG:
+        description: "artifact version tag"
+        type: string
+      ENVIRONMENT:
+        description: "environement"
+        type: string
+    secrets:
+      DOCKERHUB_PASSWORD:
+        required: true
+
+jobs:
+  release-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release info
+        run: |
+          echo "=======================RELEASE INFO======================="
+          echo "APPS: $APPS"
+          echo "VERSION: $VERSION"
+          echo "=========================================================="
+
+  build-dr-project:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
+    with:
+      PROJECT_NAME: dr
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+    secrets: inherit
+    needs: 
+      - release-info
+  
+  build-loki-project:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
+    with:
+      PROJECT_NAME: loki
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+    secrets: inherit
+    needs: 
+      - release-info
+  
+  build-thor-project:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
+    with:
+      PROJECT_NAME: thor
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+    secrets: inherit
+    needs: 
+      - release-info
+  
+  build-vision-project:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
+    with:
+      PROJECT_NAME: vision
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+    secrets: inherit
+    needs: 
+      - release-info
+
+  deploy:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
+    with:
+      REF: ${{ inputs.REF }}
+    secrets: inherit
+    needs: 
+      - build-dr-project
+      - build-thor-project
+      - build-loki-project
+      - build-vision-project
+  
+  k6-performance-scan:
+    runs-on:
+      - self-hosted
+      - Linux
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.REF }}
+      - name: Setup K6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: 0.54.0
+          browser: false
+      - name: Run k6 test
+        uses: grafana/run-k6-action@v1
+        with:
+          path: http_get.js
+    needs:
+      - deploy
