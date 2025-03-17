@@ -10,7 +10,7 @@ on:
         description: "artifact version tag"
         type: string
       ENVIRONMENT:
-        description: "environement"
+        description: "environment"
         type: string
     secrets:
       DOCKERHUB_PASSWORD:
@@ -19,12 +19,15 @@ on:
 jobs:
   release-info:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Release info
         run: |
           echo "=======================RELEASE INFO======================="
+          echo "REF: $REF"
+          echo "TAG: $TAG"
+          echo "ENVIRONMENT: $ENVIRONMENT"
           echo "APPS: $APPS"
-          echo "VERSION: $VERSION"
           echo "=========================================================="
 
   build-dr-project:
