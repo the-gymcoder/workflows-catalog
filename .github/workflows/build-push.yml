@@ -23,7 +23,6 @@ jobs:
   docker-build-push:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
-    if: ${{ contains(vars.APPS, inputs.PROJECT_NAME) }}
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
     steps:
