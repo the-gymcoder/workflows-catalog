@@ -47,6 +47,12 @@ jobs:
             echo "TAG: $TAG"
             echo "TAG: ${{ env.TAG }}"
 
+      - name: Echo environment variables
+        run: |
+          echo "====================="
+          echo "Enviroenment varaibles"
+          echo "APPS: ${{ vars.APPS }}"
+
       - name: Check out code
         uses: actions/checkout@v4
         with:
