@@ -21,13 +21,11 @@ on:
 
 jobs:
   docker-build-push:
-    if: ${{ contains(vars.APPS, inputs.PROJECT_NAME) }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
-
+    if: ${{ contains(vars.APPS, inputs.PROJECT_NAME) }}
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
-
     steps:
       - name: Check input REF
         run: |
