@@ -24,10 +24,10 @@ jobs:
       - name: Release info
         run: |
           echo "=======================RELEASE INFO======================="
-          echo "REF: $REF"
-          echo "TAG: $TAG"
-          echo "ENVIRONMENT: $ENVIRONMENT"
-          echo "APPS: $APPS"
+          echo "REF: ${{ inputs.REF }}"
+          echo "TAG: ${{ inputs.TAG }}"
+          echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+          echo "APPS: ${{ vars.APPS }}"
           echo "=========================================================="
 
   build-dr-project:
