@@ -12,9 +12,6 @@ on:
       TAG:
         description: "artifact version tag"
         type: string
-      ENVIRONMENT:
-        description: "environment"
-        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -22,7 +19,6 @@ on:
 jobs:
   docker-build-push:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
     if: contains(vars.APPS, inputs.PROJECT_NAME)
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
