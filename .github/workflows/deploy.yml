@@ -5,12 +5,14 @@ on:
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
+      ENVIRONMENT:
+        description: "environment"
+        type: string
 
 jobs:
   docker-deploy:
-
     runs-on: ubuntu-latest
-
+    environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: check input REF
         run: |
@@ -34,5 +36,7 @@ jobs:
       - name: Deploy application
         run: |
             echo "deploy application"
+            echo "environment variables"
+            echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
             echo "copy docker compose file"
             echo "docker-compose down and docker-compose up -d"

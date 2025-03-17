@@ -59,31 +59,19 @@ jobs:
     secrets: inherit
     needs: 
       - release-info
-  
-  build-vision-project:
-    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
-    with:
-      PROJECT_NAME: vision
-      REF: ${{ inputs.REF }}
-      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-    secrets: inherit
-    needs: 
-      - release-info
 
   deploy:
-    if: always()
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
     with:
       REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
     secrets: inherit
     needs: 
       - build-dr-project
       - build-thor-project
       - build-loki-project
-      - build-vision-project
   
   k6-performance-scan:
-    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
