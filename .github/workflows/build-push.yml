@@ -65,8 +65,8 @@ jobs:
         run: |
             IMAGE=$(TAG=$TAG make -sC ${{ inputs.PROJECT_NAME }} image)
             echo "IMAGE=$IMAGE" | tee -a $GITHUB_ENV
-            make -C ${{ inputs.PROJECT_NAME }} build
-            make -C ${{ inputs.PROJECT_NAME }} publish
+            TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} build
+            TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} publish
 
       - name: Verify docker image
         run: |
