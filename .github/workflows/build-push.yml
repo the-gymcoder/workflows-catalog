@@ -23,7 +23,6 @@ jobs:
   docker-build-push:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
-    if: contains(vars.APPS, inputs.PROJECT_NAME)
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
     steps:
@@ -53,7 +52,17 @@ jobs:
         run: |
           echo "====================="
           echo "Enviroenment varaibles"
-          echo "APPS: ${{ vars.APPS }}"
+          echo "APPS: ${{ vars.APPS }}
+
+      - name: project in apps
+        run: |
+          echo "project in apps"
+        if: contains(vars.APPS, inputs.PROJECT_NAME)
+
+      - name: project not in apps
+        run: |
+          echo "project not in apps"
+        if: (! contains(vars.APPS, inputs.PROJECT_NAME))
 
       - name: Check out code
         uses: actions/checkout@v4
