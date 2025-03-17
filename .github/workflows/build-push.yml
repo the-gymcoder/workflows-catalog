@@ -9,6 +9,9 @@ on:
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
+      TAG:
+        description: "artifact version tag"
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -30,11 +33,17 @@ jobs:
             else
               echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
             fi
+            if [ -z "${{ inputs.TAG }}" ]; then
+              echo "TAG=${{ github.run_number }}" >> $GITHUB_ENV
+            else
+              echo "TAG=${{ inputs.REF }}" >> $GITHUB_ENV
+            fi
 
       - name: To prove myself
         run: |
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
+            echo "input TAG: ${{ inputs.TAG }}"
             echo "BRANCH:$BRANCH"
             echo "BRANCH:${{env.BRANCH}}"
 
