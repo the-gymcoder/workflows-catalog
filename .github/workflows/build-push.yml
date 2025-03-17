@@ -51,8 +51,8 @@ jobs:
       - name: Echo environment variables
         run: |
           echo "====================="
-          echo "Enviroenment varaibles"
-          echo "APPS: ${{ vars.APPS }}
+          echo "Environment varaibles"
+          echo "APPS: ${{ vars.APPS }}"
 
       - name: project in apps
         run: |
