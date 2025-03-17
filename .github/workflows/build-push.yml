@@ -13,8 +13,6 @@ on:
         description: "artifact version tag"
         type: string
     secrets:
-      DOCKERHUB_USERNAME:
-        required: true
       DOCKERHUB_PASSWORD:
         required: true
 
