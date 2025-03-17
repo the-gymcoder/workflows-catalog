@@ -2,9 +2,6 @@ name: Deploy microservice/project
 on:
   workflow_call:
     inputs:
-      DOCKER_COMPOSE_FILE:
-        description: "docker-compose file to be copied to container."
-        type: string
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
@@ -18,14 +15,13 @@ jobs:
       - name: check input REF
         run: |
             if [ -z "${{ inputs.REF }}" ]; then
-              echo "BRANCH=master" >> $GITHUB_ENV
+              echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
             fi
 
       - name: To prove myself
         run: |
-            echo "BRANCH:$BRANCH"
             echo "input REF: ${{ inputs.REF }}"
             echo "BRANCH:$BRANCH"
             echo "BRANCH:${{env.BRANCH}}"
