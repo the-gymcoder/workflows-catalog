@@ -12,6 +12,9 @@ on:
       TAG:
         description: "artifact version tag"
         type: string
+      ENVIRONMENT:
+        description: "environement"
+        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -19,6 +22,7 @@ on:
 jobs:
   docker-build-push:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
 
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
