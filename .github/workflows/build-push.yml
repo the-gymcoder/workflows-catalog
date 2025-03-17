@@ -10,9 +10,9 @@ on:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
     secrets:
-      ARTIFACTORY_USERNAME:
+      DOCKERHUB_USERNAME:
         required: true
-      ARTIFACTORY_PASSWORD:
+      DOCKERHUB_PASSWORD:
         required: true
 
 jobs:
