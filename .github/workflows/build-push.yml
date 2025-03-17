@@ -12,6 +12,9 @@ on:
       TAG:
         description: "artifact version tag"
         type: string
+      ENVIRONMENT:
+        description: "environment"
+        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -19,7 +22,7 @@ on:
 jobs:
   docker-build-push:
     runs-on: ubuntu-latest
-    if: contains(vars.APPS, inputs.PROJECT_NAME)
+    environment: ${{ inputs.ENVIRONMENT }}
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
     steps:
@@ -44,21 +47,12 @@ jobs:
             echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
             echo "BRANCH: $BRANCH"
             echo "TAG: $TAG"
+            echo "var APPS: ${{ vars.APPS }}"
 
-      - name: Echo environment variables
+      - name: Exit if project not in apps
         run: |
-          echo "====================="
-          echo "Environment varaibles"
-          echo "APPS: ${{ vars.APPS }}"
-
-      - name: project in apps
-        run: |
-          echo "project in apps"
-        if: contains(vars.APPS, inputs.PROJECT_NAME)
-
-      - name: project not in apps
-        run: |
-          echo "project not in apps"
+          echo "Project ${{ inputs.PROJECT_NAME }} not in apps  ${{ vars.APPS }}"
+          exit 1
         if: (! contains(vars.APPS, inputs.PROJECT_NAME))
 
       - name: Check out code
