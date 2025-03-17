@@ -44,10 +44,9 @@ jobs:
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"
+            echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
             echo "BRANCH: $BRANCH"
-            echo "BRANCH: ${{env.BRANCH}}"
             echo "TAG: $TAG"
-            echo "TAG: ${{ env.TAG }}"
 
       - name: Echo environment variables
         run: |
