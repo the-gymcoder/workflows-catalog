@@ -21,6 +21,7 @@ on:
 
 jobs:
   docker-build-push:
+    if: ${{ contains(vars.APPS, inputs.PROJECT_NAME) }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
 
