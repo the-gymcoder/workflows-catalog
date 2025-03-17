@@ -26,14 +26,14 @@ jobs:
       - name: Check input REF
         run: |
             if [ -z "${{ inputs.REF }}" ]; then
-              echo "BRANCH=master" >> $GITHUB_ENV
+              echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
             fi
 
       - name: To prove myself
         run: |
-            echo "BRANCH:$BRANCH"
+            echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "BRANCH:$BRANCH"
             echo "BRANCH:${{env.BRANCH}}"
