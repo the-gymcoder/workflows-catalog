@@ -83,6 +83,7 @@ jobs:
       - build-vision-project
   
   k6-performance-scan:
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
