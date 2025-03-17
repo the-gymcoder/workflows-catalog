@@ -64,7 +64,7 @@ jobs:
         id: build
         run: |
             IMAGE=$(TAG=$TAG make -sC ${{ inputs.PROJECT_NAME }} image)
-            echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+            echo "IMAGE=$IMAGE" | tee -a $GITHUB_ENV
             make -C ${{ inputs.PROJECT_NAME }} build
             make -C ${{ inputs.PROJECT_NAME }} publish
 
