@@ -71,6 +71,7 @@ jobs:
       - release-info
 
   deploy:
+    if: always()
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
     with:
       REF: ${{ inputs.REF }}
