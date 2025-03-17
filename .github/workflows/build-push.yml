@@ -63,13 +63,6 @@ jobs:
           echo "project exists in apps"
         if: contains(${{ vars.APPS }}, ${{ inputs.PROJECT_NAME }})
 
-      - name: Check project do not exists in apps
-        run: |
-          echo "project: ${{ inputs.PROJECT_NAME }}"
-          echo "APPS: ${{ vars.APPS }}"
-          echo "project do not exists in apps"
-        if: (! contains(${{ vars.APPS }}, ${{ inputs.PROJECT_NAME }}))
-
       - name: Check out code
         uses: actions/checkout@v4
         with:
