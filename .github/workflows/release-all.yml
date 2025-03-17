@@ -83,9 +83,7 @@ jobs:
       - build-vision-project
   
   k6-performance-scan:
-    runs-on:
-      - self-hosted
-      - Linux
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
