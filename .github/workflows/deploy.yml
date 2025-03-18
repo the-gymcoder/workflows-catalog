@@ -17,24 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - name: check input REF
-        run: |
-            if [ -z "${{ inputs.REF }}" ]; then
-              echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-            else
-              echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
-            fi
-
       - name: To prove myself
         run: |
             echo "input REF: ${{ inputs.REF }}"
-            echo "BRANCH:$BRANCH"
-            echo "BRANCH:${{env.BRANCH}}"
+            echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+            echo "input TAG: ${{ inputs.TAG }}"
       
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          ref: "${{env.BRANCH}}"
+          ref: "${{ inputs.REF }}"
 
       - name: Deploy application
         run: |

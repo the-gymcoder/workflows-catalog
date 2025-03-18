@@ -26,27 +26,12 @@ jobs:
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
     steps:
-      - name: Check input REF
-        run: |
-            if [ -z "${{ inputs.REF }}" ]; then
-              echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-            else
-              echo "BRANCH=${{ inputs.REF }}" >> $GITHUB_ENV
-            fi
-            if [ -z "${{ inputs.TAG }}" ]; then
-              echo "TAG=${{ github.run_number }}" >> $GITHUB_ENV
-            else
-              echo "TAG=${{ inputs.REF }}" >> $GITHUB_ENV
-            fi
-
       - name: To prove myself
         run: |
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"
             echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
-            echo "BRANCH: $BRANCH"
-            echo "TAG: $TAG"
             echo "var APPS: ${{ vars.APPS }}"
 
       - name: Exit if project not in apps
@@ -58,7 +43,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          ref: "${{env.BRANCH}}"
+          ref: "${{ inputs.REF }}"
 
       - name: Login to dockerhub
         uses: docker/login-action@v3
