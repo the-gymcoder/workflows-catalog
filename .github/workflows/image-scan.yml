@@ -55,7 +55,7 @@ jobs:
           cat >> contrib/trivy-pr-comment.tpl <<EOF
           {{- range .}}
           {{- range .Vulnerabilities}}
-          \n#### {{ .VulnerabilityID | html }} {{ .Title | html }}\n{{ .Description | html }}\n
+          \n#### {{ .VulnerabilityID | html }} {{ .Severity | html }} {{ .Title | html }}\n{{ .Description | html }}\n
           {{ end }}
           {{- end -}}
           EOF
