@@ -17,20 +17,6 @@ on:
         required: true
 
 jobs:
-  release-info:
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
-    steps:
-      - name: Release info
-        run: |
-          echo "=======================RELEASE INFO======================="
-          echo "REF: ${{ inputs.REF }}"
-          echo "TAG: ${{ inputs.TAG }}"
-          echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
-          echo "ENVIRONMENT: ${{ env.ENVIRONMENT }}"
-          echo "APPS: ${{ vars.APPS }}"
-          echo "=========================================================="
-
   build-dr-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
@@ -38,8 +24,6 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
     secrets: inherit
-    needs: 
-      - release-info
   
   build-loki-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
@@ -48,8 +32,6 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
     secrets: inherit
-    needs: 
-      - release-info
   
   build-thor-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
@@ -58,8 +40,6 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
     secrets: inherit
-    needs: 
-      - release-info
 
   deploy:
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
