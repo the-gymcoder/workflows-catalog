@@ -45,6 +45,14 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: debug step
+        run: |
+          hostname
+          whoami
+          docker ps
+          docker image ls
+          docker pull $IMAGE_REGISTRY/dr:16 
+
       - name: Install Trivy
         run: |
           apk add --no-cache curl wget
