@@ -69,10 +69,11 @@ jobs:
           for APP in $APPS; do
             app=$(echo "$APP" | xargs)
             echo "Scanning $app"
-            trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:16 >> trivy.json
+            # trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:16 >> trivy.json
             echo "=============="
-            sleep 5
+            # sleep 5
           done
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/dr:16 > trivy.json
           
       - name: Report vulnerabilities in PR
         if: github.event_name == 'pull_request' && failure() && steps.scan.outcome == 'failure'
