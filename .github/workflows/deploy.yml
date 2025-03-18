@@ -35,5 +35,6 @@ jobs:
             echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
             echo "APPS: ${{ vars.APPS }}"
             echo "APP VERSION/TAG: ${{ inputs.TAG }}"
+            echo "TEST_ENV_VARIABLE: ${{ env.TEST_ENV_VARIABLE }}"
             echo "copy docker compose file"
             echo "docker-compose down and docker-compose up -d"
