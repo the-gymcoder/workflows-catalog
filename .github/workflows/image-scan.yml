@@ -84,7 +84,7 @@ jobs:
           #!/bin/bash
           set -eou pipefail
           echo -n '{"body":"### Vulnerabilities detected\nThe following vulnerabilities of HIGH or CRITICAL severity have been detected in the code. Please resolve these before merging the pull request.\n\n' > result.json
-          jq -c . trivy.json >> result.json
+          jq -r '.[0].Vulnerabilities[] | "#### \(.VulnerabilityID) \(.Severity) \(.Title)\n\(.Description)\n"' trivy.json >> result.json
           echo '"}' >> result.json
           echo "=================================================================result.json================================================================="
           cat result.json
