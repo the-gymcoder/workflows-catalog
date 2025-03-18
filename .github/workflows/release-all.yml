@@ -23,6 +23,7 @@ jobs:
       PROJECT_NAME: dr
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
     secrets: inherit
   
   build-loki-project:
@@ -31,6 +32,7 @@ jobs:
       PROJECT_NAME: loki
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
     secrets: inherit
   
   build-thor-project:
@@ -39,6 +41,7 @@ jobs:
       PROJECT_NAME: thor
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
     secrets: inherit
 
   deploy:
@@ -46,6 +49,7 @@ jobs:
     with:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
     secrets: inherit
     needs: 
       - build-dr-project

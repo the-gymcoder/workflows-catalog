@@ -8,6 +8,9 @@ on:
       ENVIRONMENT:
         description: "environment"
         type: string
+      TAG:
+        description: "artifact version tag"
+        type: string
 
 jobs:
   docker-deploy:
@@ -38,5 +41,7 @@ jobs:
             echo "deploy application"
             echo "environment variables"
             echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
+            echo "APPS: ${{ vars.APPS }}"
+            echo "APP VERSION/TAG: ${{ inputs.TAG }}"
             echo "copy docker compose file"
             echo "docker-compose down and docker-compose up -d"
