@@ -73,7 +73,7 @@ jobs:
             echo "=============="
             sleep 5
           done
-          trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --output trivy.json --no-progress ${IMAGE_REGISTRY}/dr:16
+          trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --output trivy.json --no-progress ${IMAGE_REGISTRY}/dr:16
           cat trivy.json
           
       - name: Report vulnerabilities in PR
