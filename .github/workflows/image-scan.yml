@@ -67,6 +67,7 @@ jobs:
           for APP in $APPS; do
             app=$(echo "$APP" | xargs)
             echo "Scanning $app"
+            trivy image --exit-code 0 --severity HIGH,CRITICAL --template "@contrib/gitlab.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:16
             echo "=============="
-            #trivy image --exit-code 0 --severity HIGH,CRITICAL --template "@contrib/gitlab.tpl" --no-progress $IMAGE_REGISTRY/dr:16
+            sleep 5
           done
