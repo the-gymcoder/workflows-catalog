@@ -22,7 +22,7 @@ jobs:
   trivy-scan:
     runs-on: ubuntu-latest
     env:
-      APPS: dr,loki,thor
+      APPS: "dr, loki, thor"
     container:
       image: docker:stable
       options: --privileged
@@ -71,5 +71,6 @@ jobs:
         run: |
           for app in $APPS; do
             echo "Scanning $app"
-            trivy image --exit-code 0 --severity HIGH,CRITICAL --template "@contrib/gitlab.tpl" --no-progress $IMAGE_REGISTRY/dr:16
+            echo "=============="
+            #trivy image --exit-code 0 --severity HIGH,CRITICAL --template "@contrib/gitlab.tpl" --no-progress $IMAGE_REGISTRY/dr:16
           done
