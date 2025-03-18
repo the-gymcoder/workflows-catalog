@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: To prove myself
         run: |
+            #!/usr/bin/env bash
+            set -euo pipefail
             echo "input REF: ${{ inputs.REF }}"
             echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
             echo "input TAG: ${{ inputs.TAG }}"
@@ -30,11 +32,54 @@ jobs:
 
       - name: Deploy application
         run: |
+            #!/usr/bin/env bash
+            set -euo pipefail
             echo "deploy application"
             echo "environment variables"
             echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
             echo "APPS: ${{ vars.APPS }}"
             echo "APP VERSION/TAG: ${{ inputs.TAG }}"
             echo "TEST_ENV_VARIABLE: ${{ env.TEST_ENV_VARIABLE }}"
+            cat <<EOF > docker-compose.yml
+            version: '3'
+            services:
+            dr:
+              image: docker.artifactory.bc.edu/gha-playground/ea_dr:$TAG
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello world"
+                    sleep 60
+                  done
+            loki:
+              image: docker.artifactory.bc.edu/gha-playground/ea_loki:$TAG
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello world"
+                    sleep 60
+                  done
+            thor:
+              image: docker.artifactory.bc.edu/gha-playground/ea_thor:$TAG
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello world"
+                    sleep 60
+                  done
+            EOF
             echo "copy docker compose file"
+            cat docker-compose.yml
             echo "docker-compose down and docker-compose up -d"

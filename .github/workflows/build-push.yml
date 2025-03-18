@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: To prove myself
         run: |
+            #!/usr/bin/env bash
+            set -euo pipefail
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"
@@ -54,6 +56,8 @@ jobs:
       - name: Execute make targets to build and push docker image
         id: build
         run: |
+            #!/usr/bin/env bash
+            set -euo pipefail
             IMAGE=$(TAG=$TAG make -sC ${{ inputs.PROJECT_NAME }} image)
             echo "IMAGE=$IMAGE" | tee -a $GITHUB_ENV
             TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} build
@@ -62,6 +66,8 @@ jobs:
 
       - name: Verify docker image
         run: |
+            #!/usr/bin/env bash
+            set -euo pipefail
             echo "IMAGE is $IMAGE"
             docker image rm "$IMAGE"
             docker pull "$IMAGE"
