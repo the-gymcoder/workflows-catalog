@@ -22,15 +22,10 @@ jobs:
   trivy-scan:
     runs-on: ubuntu-latest
     env:
-      APPS: "dr, loki, thor"
+      APPS: "dr loki thor"
     container:
       image: docker:stable
       options: --privileged
-
-    services:
-      dind:
-        image: docker:stable-dind
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -69,7 +64,9 @@ jobs:
 
       - name: Scan images
         run: |
-          for app in $APPS; do
+          IFS=' ' read -ra APPS_ARRAY <<< "$APPS"
+          for APP in "${APPS_ARRAY[@]}"; do
+            app=$(echo "$APP" | xargs)
             echo "Scanning $app"
             echo "=============="
             #trivy image --exit-code 0 --severity HIGH,CRITICAL --template "@contrib/gitlab.tpl" --no-progress $IMAGE_REGISTRY/dr:16
