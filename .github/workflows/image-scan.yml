@@ -73,7 +73,7 @@ jobs:
             echo "=============="
             sleep 5
           done
-          trivy image --exit-code 1 --severity HIGH,CRITICAL --format json --output trivy.json --no-progress ${IMAGE_REGISTRY}/dr:16
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --output trivy.json --no-progress ${IMAGE_REGISTRY}/dr:16
           
       - name: Report vulnerabilities in PR
         if: github.event_name == 'pull_request' && failure() && steps.scan.outcome == 'failure'
@@ -85,6 +85,7 @@ jobs:
           set -eou pipefail
           echo -n '{"body":"### Vulnerabilities detected\nThe following vulnerabilities of HIGH or CRITICAL severity have been detected in the code. Please resolve these before merging the pull request.\n\n' > result.json
           #jq -r '.Results[] | select(.Vulnerabilities != null) | .Vulnerabilities[] | "#### \(.VulnerabilityID) \(.Severity) \(.Title)\n\(.Description)\n"' trivy.json >> result.json
+          cat trivy.json >> result.json
           echo '"}' >> result.json
           echo "=================================================================result.json================================================================="
           cat result.json
