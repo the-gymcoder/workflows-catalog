@@ -47,7 +47,7 @@ jobs:
             version: '3'
             services:
             dr:
-              image: ${{ env.IMAGE_REGISTRY }}/dr:$TAG
+              image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
@@ -59,7 +59,7 @@ jobs:
                     sleep 60
                   done
             loki:
-              image: ${{ env.IMAGE_REGISTRY }}/loki:$TAG
+              image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
@@ -71,7 +71,7 @@ jobs:
                     sleep 60
                   done
             thor:
-              image: ${{ env.IMAGE_REGISTRY }}/thor:$TAG
+              image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
