@@ -68,7 +68,16 @@ jobs:
           for APP in $APPS; do
             app=$(echo "$APP" | xargs)
             echo "Scanning $app"
-            trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:16
+            trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:16 >> trivy.json
             echo "=============="
             sleep 5
           done
+      - name: Validate scan report
+        run: |
+          if test -f trivy.json; then
+            echo "Trivy scan failed"
+            cat trivy.json
+            exit 1
+          else
+            echo "Trivy scan passed"
+          fi
