@@ -27,6 +27,7 @@ jobs:
           echo "REF: ${{ inputs.REF }}"
           echo "TAG: ${{ inputs.TAG }}"
           echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+          echo "ENVIRONMENT: ${{ env.ENVIRONMENT }}"
           echo "APPS: ${{ vars.APPS }}"
           echo "=========================================================="
 
