@@ -78,7 +78,7 @@ jobs:
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{env.IMAGE}}"
+          image-ref: ${IMAGE_REGISTRY}/dr:16
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
           format: 'json'
@@ -92,7 +92,7 @@ jobs:
         with:
           token: ${{ github.token }}
           input-filename: "result.json"
-          label: ''
+          label: 'vulnerability'
           assignee: ''
           project-id: ''
           
