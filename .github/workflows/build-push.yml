@@ -58,11 +58,11 @@ jobs:
         run: |
             #!/usr/bin/env bash
             set -euo pipefail
-            IMAGE=$(TAG=$TAG make -sC ${{ inputs.PROJECT_NAME }} image)
+            IMAGE=$(TAG=${{ inputs.TAG }} make -sC ${{ inputs.PROJECT_NAME }} image)
             echo "IMAGE=$IMAGE" | tee -a $GITHUB_ENV
-            TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} build
+            TAG=${{ inputs.TAG }} make -C ${{ inputs.PROJECT_NAME }} build
             docker image ls "$IMAGE"
-            TAG=$TAG make -C ${{ inputs.PROJECT_NAME }} publish
+            TAG=${{ inputs.TAG }} make -C ${{ inputs.PROJECT_NAME }} publish
 
       - name: Verify docker image
         run: |
