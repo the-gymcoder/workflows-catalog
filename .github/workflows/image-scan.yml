@@ -45,14 +45,9 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Trivy scan
-        id: trivy-scan
+      - name: Install Trivy
         run: |
-          apk add --no-cache curl
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          mkdir -p /root/.cache/trivy-reports
-          IFS=',' read -ra APPS_ARRAY <<< "$APPS"
-          for app in "${APPS_ARRAY[@]}"; do
-            docker pull $app:latest
-            trivy image --format json --output /root/.cache/trivy-reports/$app.json $app:latest
-          done
+          apk add --no-cache curl wget
+          export TRIVY_VERSION=$(wget -qO - "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo $TRIVY_VERSION
+          wget --no-verbose https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -O - | tar -zxvf -
