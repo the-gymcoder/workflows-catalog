@@ -26,6 +26,7 @@ jobs:
     container:
       image: docker:stable
       options: --privileged
+
     services:
       dind:
         image: docker:stable-dind
@@ -50,6 +51,7 @@ jobs:
           hostname
           hostname -i
           pwd
+          ls -rlta
           whoami
           docker ps
           docker image ls
