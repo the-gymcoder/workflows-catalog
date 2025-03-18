@@ -64,6 +64,7 @@ jobs:
 
       - name: Scan images
         run: |
+          echo "APPS: $APPS"
           IFS=' ' read -ra APPS_ARRAY <<< "$APPS"
           for APP in "${APPS_ARRAY[@]}"; do
             app=$(echo "$APP" | xargs)
