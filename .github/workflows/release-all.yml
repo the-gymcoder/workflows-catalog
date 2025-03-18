@@ -1,4 +1,4 @@
-name: EagleApps release all
+name: Build Deploy Scan and Performance test microservices/project
 on:
   workflow_call:
     inputs:
