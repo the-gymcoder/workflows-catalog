@@ -58,6 +58,7 @@ jobs:
       - name: Scan docker images
         id: scan
         run: |
+          APPS to scan: ${{ inputs.APPS }}
           for APP in ${{ inputs.APPS }}; do
             app=$(echo "$APP" | xargs)
             echo "Scanning $app"
