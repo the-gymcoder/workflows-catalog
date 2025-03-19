@@ -20,6 +20,21 @@ on:
         required: true
 
 jobs:
+  varaibles-parameters:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up env
+        run: |
+          echo "input REF: ${{ inputs.REF }}"
+          echo "input TAG: ${{ inputs.TAG }}"
+          echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+          echo "input APPS: ${{ inputs.APPS }}"
+      - name: Exit if APPS not in apps
+        run: |
+          echo "APPS ${{ inputs.APPS }} not in apps  ${{ vars.APPS }}"
+          exit 1
+        if: (! contains(vars.APPS, inputs.APPS))
+
   build-dr-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
@@ -28,6 +43,8 @@ jobs:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
     secrets: inherit
+    needs: 
+      - varaibles-parameters
   
   build-loki-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
@@ -37,6 +54,8 @@ jobs:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
     secrets: inherit
+    needs: 
+      - varaibles-parameters
   
   build-thor-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
@@ -46,6 +65,8 @@ jobs:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
     secrets: inherit
+    needs: 
+      - varaibles-parameters
 
   scan-projects:
     uses: the-gymcoder/workflows-catalog/.github/workflows/image-scan.yml@init
