@@ -53,6 +53,7 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
+    secrets: inherit
     needs:
       - build-dr-project
       - build-thor-project
