@@ -44,6 +44,20 @@ jobs:
       TAG: ${{ inputs.TAG }}
     secrets: inherit
 
+  scan-projects:
+    uses: the-gymcoder/workflows-catalog/.github/workflows/image-scan.yml@init
+    permissions:
+      contents: read
+      pull-requests: write
+    with:
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
+    needs:
+      - build-dr-project
+      - build-thor-project
+      - build-loki-project
+
   deploy:
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
     with:
