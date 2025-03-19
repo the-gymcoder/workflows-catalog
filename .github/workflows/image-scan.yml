@@ -98,6 +98,6 @@ jobs:
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Trivy fs Scan and Report to PR
-        uses: the-gymcoder/trivy-fs-scan-pr-report@v1
+        uses: the-gymcoder/trivy-fs-scan-pr-report@main
         with:
           github_token: ${{ github.token }}
