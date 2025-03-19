@@ -46,14 +46,14 @@ jobs:
 
   scan-projects:
     uses: the-gymcoder/workflows-catalog/.github/workflows/image-scan.yml@init
-    permissions:
-      contents: read
-      pull-requests: write
     with:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
     secrets: inherit
+    permissions:
+      contents: read
+      pull-requests: write
     needs:
       - build-dr-project
       - build-thor-project
