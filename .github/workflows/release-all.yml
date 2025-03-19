@@ -22,6 +22,7 @@ on:
 jobs:
   varaibles-parameters:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Set up env
         run: |
