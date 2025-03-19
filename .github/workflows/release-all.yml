@@ -35,6 +35,21 @@ jobs:
           echo "APPS ${{ inputs.APPS }} not in apps  ${{ vars.APPS }}"
           exit 1
         if: (! contains(vars.APPS, inputs.APPS))
+      - name: pull-request trigger
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "pull_request trigger"
+          echo "pull_request trigger"
+      - name: push trigger
+        if: github.event_name == 'push'
+        run: |
+          echo "push trigger"
+          echo "push trigger"
+      - name: workflow_dispatch trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "workflow_dispatch trigger"
+          echo "workflow_dispatch trigger"
 
   build-dr-project:
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
