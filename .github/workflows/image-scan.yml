@@ -12,6 +12,9 @@ on:
       TAG:
         description: "artifact version tag"
         type: string
+      APPS:
+        description: "docker images to scan"
+        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -55,7 +58,7 @@ jobs:
       - name: Scan docker images
         id: scan
         run: |
-          for APP in ${{ vars.APPS }}; do
+          for APP in ${{ inputs.APPS }}; do
             app=$(echo "$APP" | xargs)
             echo "Scanning $app"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
