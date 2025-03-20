@@ -55,8 +55,8 @@ jobs:
       - name: Scan docker images
         id: scan
         run: |
-          APPS to scan: ${{ vars.APP }}
-          for app in ${{ vars.APP }}; do
+          APPS to scan: ${{ vars.APPS }}
+          for app in ${{ vars.APPS }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
