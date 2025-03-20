@@ -12,9 +12,6 @@ on:
       ENVIRONMENT:
         description: "environment"
         type: string
-      APP:
-        description: "microservices to build"
-        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -90,7 +87,6 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
-      APP: ${{ inputs.APP }}
     secrets: inherit
     permissions:
       contents: read
