@@ -12,7 +12,7 @@ on:
       ENVIRONMENT:
         description: "environment"
         type: string
-      APPS:
+      APP:
         description: "microservices to build"
         type: string
     secrets:
@@ -90,7 +90,7 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
-      APPS: ${{ inputs.APPS }}
+      APP: ${{ inputs.APP }}
     secrets: inherit
     permissions:
       contents: read
