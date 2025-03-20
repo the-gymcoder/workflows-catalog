@@ -66,7 +66,7 @@ jobs:
           done
 
       - name: Report docker image vulnerabilities in PR
-        if: github.event_name == 'pull_request' && failure() && steps.scan.outcome == 'failure'
+        if: ${{ github.event_name == 'pull_request' }} && ${{ failure() }} && ${{ steps.scan.outcome == 'failure' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -83,7 +83,7 @@ jobs:
             -d @result.json
 
       - name: Report no docker image vulnerabilities in PR
-        if: github.event_name == 'pull_request' && success() && steps.scan.outcome == 'success'
+        if: ${{ github.event_name == 'pull_request' }} && ${{ success() }} && ${{ steps.scan.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -102,6 +102,7 @@ jobs:
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Trivy fs Scan and Report to PR
+        if: ${{ github.event_name == 'pull_request' }}
         uses: the-gymcoder/trivy-fs-scan-pr-report@main
         with:
           github_token: ${{ github.token }}
