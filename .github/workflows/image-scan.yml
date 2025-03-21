@@ -10,12 +10,15 @@ on:
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
+        required: true
       ENVIRONMENT:
         description: "environment"
         type: string
+        required: true
       TAG:
         description: "artifact version tag"
         type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -61,8 +64,9 @@ jobs:
         run: |
           APPS to scan: ${{ inputs.PROJECT_NAME }}
           APPS="${{ inputs.PROJECT_NAME }}"
+          TAG="${{ inputs.TAG }}"
           echo "Scanning docker images for APPS: $APPS"
-          echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
+          echo "Scanning docker images for TAG: $TAG"
           for app in $APPS; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
