@@ -79,7 +79,7 @@ jobs:
           exit $EXIT_CODE
 
       - name: Report docker image vulnerabilities in PR
-        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
+        if: ${{ github.event_name == 'pull_request' && steps.scan.outcome == 'failure' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -96,7 +96,7 @@ jobs:
             -d @result.json
 
       - name: Report no docker image vulnerabilities in PR
-        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'success' }}
+        if: ${{ github.event_name == 'pull_request' && steps.scan.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
