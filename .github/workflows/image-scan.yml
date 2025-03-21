@@ -128,23 +128,6 @@ jobs:
         with:
           ref: "${{ inputs.REF }}"
 
-      - name: Install Trivy
-        run: |
-          apk add --no-cache curl wget bash jq
-          export TRIVY_VERSION=$(wget -qO - "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-          echo TRIVY_VERSION: $TRIVY_VERSION
-          wget --no-verbose https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -O - | tar -zxvf -
-          cat >> contrib/trivy-pr-comment.tpl <<EOF
-          {{- range .}}
-          {{- range .Vulnerabilities}}
-          \n#### {{ .VulnerabilityID | html }} {{ .Severity | html }} {{ .Title | html }}\n
-          {{ end }}
-          {{- end -}}
-          EOF
-          mv trivy /usr/local/bin/trivy
-          chmod +x /usr/local/bin/trivy
-          trivy --version
-
       - name: Obtain template file
         shell: bash
         run: curl -o trivy-pr-comment.tpl https://raw.githubusercontent.com/domstolene/trivy-pr-report/main/trivy-pr-comment.tpl
@@ -171,7 +154,7 @@ jobs:
       - name: Report vulnerabilities in PR
         if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
         env:
-          GITHUB_TOKEN: ${{ inputs.github_token }}
+          GITHUB_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           echo -n "{\"body\":\"### Trivy fs scan - Vulnerabilities detected\nThe following vulnerabilities of HIGH or CRITICAL severity has been detected in the code. Please resolve these before merging the pull request.\n\n" > result.json
@@ -186,7 +169,7 @@ jobs:
       - name: Report no vulnerabilities in PR
         if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'success' }}
         env:
-          GITHUB_TOKEN: ${{ inputs.github_token }}
+          GITHUB_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           echo -n "{\"body\":\"### Trivy fs scan - No vulnerabilities detected\nNo vulnerabilities of HIGH or CRITICAL severity has been detected in the code.\"}" > result.json
