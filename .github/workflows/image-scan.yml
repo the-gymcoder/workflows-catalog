@@ -156,7 +156,7 @@ jobs:
           trivy-config: ''
 
       - name: Report vulnerabilities in PR
-        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
+        if: ${{ github.event_name == 'pull_request' }} && failure()  && ${{ steps.scan.outcome == 'failure' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
