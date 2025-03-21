@@ -66,7 +66,7 @@ jobs:
                         echo "Hello world"
                         sleep 60
                       done
-              EOF
+            EOF
             else
             echo "multiple applications to deploy"
             echo "multiple applications to deploy"
@@ -110,7 +110,7 @@ jobs:
                       echo "Hello world"
                       sleep 60
                     done
-              EOF
+            EOF
             fi
             echo "docker-compose file created"
             echo "docker-compose file created"
