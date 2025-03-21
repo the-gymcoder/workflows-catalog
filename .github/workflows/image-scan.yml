@@ -62,13 +62,21 @@ jobs:
       - name: Scan docker images
         id: scan
         run: |
+          set +e
+          EXIT_CODE=0
           echo "Scanning docker images for APPS: ${{ inputs.PROJECT_NAME }}"
           echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
           for app in ${{ inputs.PROJECT_NAME }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
+            
+            if [[ $? -ne 0 ]]; then
+              echo "Trivy scan failed for $app"
+              EXIT_CODE=1
+            fi
           done
+          exit $EXIT_CODE
 
       - name: Report docker image vulnerabilities in PR
         if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
