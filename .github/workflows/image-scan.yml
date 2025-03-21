@@ -103,6 +103,7 @@ jobs:
             -d @result.json
 
       - name: Check if vulnerabilities were found
+        if: always()
         run: |
           echo "Checking if vulnerabilities were found"
           cat trivy.json 
