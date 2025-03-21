@@ -67,14 +67,14 @@ jobs:
         run: |
           echo "Scanning docker images for APPS: $APPS"
           echo "Scanning docker images for TAG: $TAG"
-          for app in $APPS; do
+          for app in ${{ inputs.PROJECT_NAME }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
           done
 
       - name: Report docker image vulnerabilities in PR
-        if: ${{ github.event_name == 'pull_request' }} && ${{ failure() }} && ${{ steps.scan.outcome == 'failure' }}
+        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -91,7 +91,7 @@ jobs:
             -d @result.json
 
       - name: Report no docker image vulnerabilities in PR
-        if: ${{ github.event_name == 'pull_request' }} && ${{ success() }} && ${{ steps.scan.outcome == 'success' }}
+        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'success' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
