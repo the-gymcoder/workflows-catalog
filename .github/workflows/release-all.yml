@@ -14,6 +14,10 @@ on:
         description: "environment"
         type: string
         required: true
+      APPS:
+        description: "APPS"
+        type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -89,7 +93,7 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
-      PROJECT_NAME: ${{ vars.APPS }}
+      PROJECT_NAME: ${{ inputs.APPS }}
     secrets: inherit
     permissions:
       contents: read
