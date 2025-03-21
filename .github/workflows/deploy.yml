@@ -29,15 +29,15 @@ jobs:
     steps:
       - name: To prove myself
         run: |
-            #!/usr/bin/env bash
-            set -euo pipefail
-            echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
-            echo "input REF: ${{ inputs.REF }}"
-            echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
-            echo "input TAG: ${{ inputs.TAG }}"
-            echo "====environment variables===="
-            echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
-            echo "APPS: ${{ vars.APPS }}"
+          #!/usr/bin/env bash
+          set -euo pipefail
+          echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
+          echo "input REF: ${{ inputs.REF }}"
+          echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+          echo "input TAG: ${{ inputs.TAG }}"
+          echo "====environment variables===="
+          echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
+          echo "APPS: ${{ vars.APPS }}"
       
       - name: Check out code
         uses: actions/checkout@v4
@@ -46,76 +46,68 @@ jobs:
 
       - name: Deploy application
         run: |
-            #!/usr/bin/env bash
-            set -euo pipefail
-            echo "deploy application"
-            APPS_ARRAY=(${{ inputs.PROJECT_NAME }})
-            echo "APPS_ARRAY: ${APPS_ARRAY}"
-            echo "APPS_ARRAY: ${#APPS_ARRAY[@]}"
-            if ${#APPS_ARRAY[@]} -eq 1; then
-              cat <<EOF > docker-compose.yml
-              version: '3'
-              services:
-                ${APPS_ARRAY[0]}:
-                  image: ${{ env.IMAGE_REGISTRY }}/${APPS_ARRAY[0]}:${{ inputs.TAG }}
-                  entrypoint:
-                    - ""
-                  command:
-                    - /bin/sh
-                    - -c
-                    - |
-                      while true; do
-                        echo "Hello world"
-                        sleep 60
-                      done
-            EOF
-            else
+          #!/usr/bin/env bash
+          set -euo pipefail
+          echo "deploy application"
+          APPS_ARRAY=(${{ inputs.PROJECT_NAME }})
+          echo "APPS_ARRAY: ${APPS_ARRAY[@]}"
+          echo "APPS_ARRAY length: ${#APPS_ARRAY[@]}"
+          if [[ ${#APPS_ARRAY[@]} -eq 1 ]]; then
+            cat <<EOF > docker-compose.yml
+version: '3'
+services:
+  ${APPS_ARRAY[0]}:
+    image: ${{ env.IMAGE_REGISTRY }}/${APPS_ARRAY[0]}:${{ inputs.TAG }}
+    entrypoint:
+      - ""
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          echo "Hello world"
+          sleep 60
+EOF
+          else
             echo "multiple applications to deploy"
-            echo "multiple applications to deploy"
-            echo "multiple applications to deploy"
-              cat <<EOF > docker-compose.yml
-              version: '3'
-              services:
-              dr:
-                image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-                    done
-              loki:
-                image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-                    done
-              thor:
-                image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-                    done
-            EOF
-            fi
-            echo "docker-compose file created"
-            echo "docker-compose file created"
-            echo "copy docker compose file"
-            cat docker-compose.yml
-            echo "docker-compose down and docker-compose up -d"
+            cat <<EOF > docker-compose.yml
+version: '3'
+services:
+  dr:
+    image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
+    entrypoint:
+      - ""
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          echo "Hello world"
+          sleep 60
+  loki:
+    image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
+    entrypoint:
+      - ""
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          echo "Hello world"
+          sleep 60
+  thor:
+    image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
+    entrypoint:
+      - ""
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          echo "Hello world"
+          sleep 60
+EOF
+          fi
+          echo "docker-compose file created"
+          cat docker-compose.yml
+          echo "docker-compose down and docker-compose up -d"
