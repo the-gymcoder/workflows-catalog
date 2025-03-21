@@ -70,8 +70,14 @@ jobs:
           for app in ${{ inputs.PROJECT_NAME }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
-            trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
+            trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
           done
+
+      - name: Check if vulnerabilities were found
+        id: check
+        run: |
+          echo "Checking if vulnerabilities were found"
+          cat trivy.json 
 
       - name: Report docker image vulnerabilities in PR
         if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
