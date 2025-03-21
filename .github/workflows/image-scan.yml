@@ -61,6 +61,8 @@ jobs:
         run: |
           APPS to scan: ${{ inputs.PROJECT_NAME }}
           APPS="${{ inputs.PROJECT_NAME }}"
+          echo "Scanning docker images for APPS: $APPS"
+          echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
           for app in $APPS; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
