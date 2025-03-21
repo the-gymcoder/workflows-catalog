@@ -19,6 +19,9 @@ on:
         description: "artifact version tag"
         type: string
         required: true
+      skip_dirs:
+        description: "comma separated list of directories to skip"
+        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -114,14 +117,88 @@ jobs:
         if: always()
         run: |
           echo "Checking if vulnerabilities were found"
-          cat trivy.json 
+          cat trivy.json | sort | uniq | tr -d '\n'
 
   trivy-fs-scan:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
+    container:
+      image: docker:stable
+      options: --privileged
     steps:
-      - name: Trivy fs Scan and Report to PR
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: the-gymcoder/trivy-fs-scan-pr-report@main
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
-          github_token: ${{ github.token }}
+          ref: "${{ inputs.REF }}"
+
+      - name: Install Trivy
+        run: |
+          apk add --no-cache curl wget bash jq
+          export TRIVY_VERSION=$(wget -qO - "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo TRIVY_VERSION: $TRIVY_VERSION
+          wget --no-verbose https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz -O - | tar -zxvf -
+          cat >> contrib/trivy-pr-comment.tpl <<EOF
+          {{- range .}}
+          {{- range .Vulnerabilities}}
+          \n#### {{ .VulnerabilityID | html }} {{ .Severity | html }} {{ .Title | html }}\n
+          {{ end }}
+          {{- end -}}
+          EOF
+          mv trivy /usr/local/bin/trivy
+          chmod +x /usr/local/bin/trivy
+          trivy --version
+
+      - name: Obtain template file
+        shell: bash
+        run: curl -o trivy-pr-comment.tpl https://raw.githubusercontent.com/domstolene/trivy-pr-report/main/trivy-pr-comment.tpl
+    
+      - name: Run Trivy for PR report
+        uses: aquasecurity/trivy-action@master
+        id: scan
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          scan-type: 'fs'
+          format: 'template'
+          template: '@trivy-pr-comment.tpl'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy.json'
+          exit-code: 1
+          skip-dirs: ${{ inputs.skip_dirs }}
+          scanners: 'vuln'   
+
+      - name: Report vulnerabilities in PR
+        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
+        env:
+          GITHUB_TOKEN: ${{ inputs.github_token }}
+        shell: bash
+        run: |
+          echo -n "{\"body\":\"### Trivy fs scan - Vulnerabilities detected\nThe following vulnerabilities of HIGH or CRITICAL severity has been detected in the code. Please resolve these before merging the pull request.\n\n" > result.json
+          cat trivy.json | sort | uniq | tr -d '\n' >> result.json
+          echo "\"}" >> result.json
+          curl -X POST -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            ${{ github.event.pull_request.comments_url }} \
+            -d @result.json
+    
+      - name: Report no vulnerabilities in PR
+        if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ inputs.github_token }}
+        shell: bash
+        run: |
+          echo -n "{\"body\":\"### Trivy fs scan - No vulnerabilities detected\nNo vulnerabilities of HIGH or CRITICAL severity has been detected in the code.\"}" > result.json
+          curl -X POST -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            ${{ github.event.pull_request.comments_url }} \
+            -d @result.json
+
+      - name: Check if vulnerabilities were found
+        if: always()
+        run: |
+          echo "Checking if vulnerabilities were found"
+          cat trivy.json | sort | uniq | tr -d '\n'
