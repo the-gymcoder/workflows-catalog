@@ -67,7 +67,7 @@ jobs:
                     while true; do
                       echo "Hello world"
                       sleep 60
-            EOF
+EOF
           else
             echo "multiple applications to deploy"
             cat <<EOF > docker-compose.yml
@@ -106,7 +106,7 @@ jobs:
                     while true; do
                       echo "Hello world"
                       sleep 60
-            EOF
+EOF
           fi
           echo "docker-compose file created"
           cat docker-compose.yml
