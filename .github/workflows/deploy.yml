@@ -2,10 +2,6 @@ name: Deploy microservice/project
 on:
   workflow_call:
     inputs:
-      PROJECT_NAME:
-        description: "Project(s) to build and deploy as a comma-separated string."
-        type: string
-        required: true
       REF:
         description: "Branch, tag, or commit SHA from which the project should be built."
         type: string
@@ -30,7 +26,6 @@ jobs:
       - name: Display Inputs and Environment Variables
         run: |
           set -euo pipefail
-          echo "PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
           echo "REF: ${{ inputs.REF }}"
           echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
           echo "TAG: ${{ inputs.TAG }}"
@@ -47,20 +42,12 @@ jobs:
         run: |
           set -euo pipefail
           echo "Deploying application(s)..."
-
-          # Convert comma-separated PROJECT_NAME into an array
-          IFS=',' read -r -a APPS_ARRAY <<< "${{ inputs.PROJECT_NAME }}"
-
-          echo "Apps to deploy: ${APPS_ARRAY[*]}"
-          echo "Total apps: ${#APPS_ARRAY[@]}"
+          echo "Generating docker-compose.yml for APP: ${{ vars.APPS }} with TAG: ${{ inputs.TAG }}"
 
           cat <<EOF > docker-compose.yml
           version: '3'
           services:
-EOF
-          for APP in "${APPS_ARRAY[@]}"; do
-            cat <<EOF >> docker-compose.yml
-            $APP:
+            dr:
               image: ${{ env.IMAGE_REGISTRY }}/$APP:${{ inputs.TAG }}
               entrypoint:
                 - ""
@@ -69,12 +56,34 @@ EOF
                 - -c
                 - |
                   while true; do
-                    echo "Hello from $APP"
+                    echo "Hello from dr"
                     sleep 60
                   done
-EOF
-          done
-
+            loki:
+              image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello from loki"
+                    sleep 60
+                  done
+            thor:
+              image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello from thor"
+                    sleep 60
+                  done
+          EOF
           echo "Generated docker-compose.yml:"
           cat docker-compose.yml
 
