@@ -67,7 +67,7 @@ jobs:
           for app in ${{ inputs.PROJECT_NAME }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
-            trivy image --exit-code 0 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
+            trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
           done
 
       - name: Report docker image vulnerabilities in PR
