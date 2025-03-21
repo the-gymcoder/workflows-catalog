@@ -3,6 +3,10 @@ name: Trivy scan
 on:
   workflow_call:
     inputs:
+      PROJECT_NAME:
+        description: "project to scan."
+        type: string
+        required: true
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
@@ -55,8 +59,8 @@ jobs:
       - name: Scan docker images
         id: scan
         run: |
-          APPS to scan: ${{ vars.APPS }}
-          APPS="${{ vars.APPS }}"
+          APPS to scan: ${{ inputs.PROJECT_NAME }}
+          APPS="${{ inputs.PROJECT_NAME }}"
           for app in $APPS; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"

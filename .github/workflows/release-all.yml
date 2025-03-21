@@ -89,6 +89,7 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
+      PROJECT_NAME: ${{ vars.APPS }}
     secrets: inherit
     permissions:
       contents: read
