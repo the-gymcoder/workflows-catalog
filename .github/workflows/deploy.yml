@@ -58,7 +58,6 @@ jobs:
           version: '3'
           services:
 EOF
-
           for APP in "${APPS_ARRAY[@]}"; do
             cat <<EOF >> docker-compose.yml
             $APP:
