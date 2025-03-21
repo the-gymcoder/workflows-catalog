@@ -123,6 +123,10 @@ jobs:
       image: docker:stable
       options: --privileged
     steps:
+      - name: Install dependencies
+        run: |
+          apk add --no-cache curl wget bash jq
+
       - name: Check out code
         uses: actions/checkout@v4
         with:
