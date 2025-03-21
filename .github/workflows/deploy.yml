@@ -3,19 +3,19 @@ on:
   workflow_call:
     inputs:
       PROJECT_NAME:
-        description: "project to build docker image and push."
+        description: "Project(s) to build and deploy as a comma-separated string."
         type: string
         required: true
       REF:
-        description: "branch, tag, or commit SHA from which the project should be build."
+        description: "Branch, tag, or commit SHA from which the project should be built."
         type: string
         required: true
       ENVIRONMENT:
-        description: "environment"
+        description: "Target environment"
         type: string
         required: true
       TAG:
-        description: "artifact version tag"
+        description: "Artifact version tag"
         type: string
         required: true
 
@@ -27,87 +27,59 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - name: To prove myself
+      - name: Display Inputs and Environment Variables
         run: |
-          #!/usr/bin/env bash
           set -euo pipefail
-          echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
-          echo "input REF: ${{ inputs.REF }}"
-          echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
-          echo "input TAG: ${{ inputs.TAG }}"
-          echo "====environment variables===="
+          echo "PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
+          echo "REF: ${{ inputs.REF }}"
+          echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
+          echo "TAG: ${{ inputs.TAG }}"
+          echo "==== Environment Variables ===="
           echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
           echo "APPS: ${{ vars.APPS }}"
-      
+
       - name: Check out code
         uses: actions/checkout@v4
         with:
           ref: "${{ inputs.REF }}"
 
-      - name: Deploy application
+      - name: Generate and Deploy Docker Compose File
         run: |
-          #!/usr/bin/env bash
           set -euo pipefail
-          echo "deploy application"
-          APPS_ARRAY=(${{ inputs.PROJECT_NAME }})
-          echo "APPS_ARRAY: ${APPS_ARRAY[@]}"
-          echo "APPS_ARRAY length: ${#APPS_ARRAY[@]}"
-          if [[ ${#APPS_ARRAY[@]} -eq 1 ]]; then
-            cat <<EOF > docker-compose.yml
-            version: '3'
-            services:
-              ${APPS_ARRAY[0]}:
-                image: ${{ env.IMAGE_REGISTRY }}/${APPS_ARRAY[0]}:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-EOF
-          else
-            echo "multiple applications to deploy"
-            cat <<EOF > docker-compose.yml
-            version: '3'
-            services:
-              dr:
-                image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-              loki:
-                image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-              thor:
-                image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
-                entrypoint:
-                  - ""
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    while true; do
-                      echo "Hello world"
-                      sleep 60
-EOF
-          fi
-          echo "docker-compose file created"
+          echo "Deploying application(s)..."
+
+          # Convert comma-separated PROJECT_NAME into an array
+          IFS=',' read -r -a APPS_ARRAY <<< "${{ inputs.PROJECT_NAME }}"
+
+          echo "Apps to deploy: ${APPS_ARRAY[*]}"
+          echo "Total apps: ${#APPS_ARRAY[@]}"
+
+          cat <<EOF > docker-compose.yml
+          version: '3'
+          services:
+          EOF
+
+          for APP in "${APPS_ARRAY[@]}"; do
+            cat <<EOF >> docker-compose.yml
+            $APP:
+              image: ${{ env.IMAGE_REGISTRY }}/$APP:${{ inputs.TAG }}
+              entrypoint:
+                - ""
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  while true; do
+                    echo "Hello from $APP"
+                    sleep 60
+                  done
+            EOF
+          done
+
+          echo "Generated docker-compose.yml:"
           cat docker-compose.yml
-          echo "docker-compose down and docker-compose up -d"
+
+          # Deploy using Docker Compose
+          #docker-compose down
+          #docker-compose up -d
+          echo "Docker Compose deployment completed."
