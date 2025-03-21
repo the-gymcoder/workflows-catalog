@@ -57,7 +57,7 @@ jobs:
           cat <<EOF > docker-compose.yml
           version: '3'
           services:
-          EOF
+EOF
 
           for APP in "${APPS_ARRAY[@]}"; do
             cat <<EOF >> docker-compose.yml
@@ -73,7 +73,7 @@ jobs:
                     echo "Hello from $APP"
                     sleep 60
                   done
-            EOF
+EOF
           done
 
           echo "Generated docker-compose.yml:"
