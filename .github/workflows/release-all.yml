@@ -9,9 +9,11 @@ on:
       TAG:
         description: "artifact version tag"
         type: string
+        required: true
       ENVIRONMENT:
         description: "environment"
         type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true

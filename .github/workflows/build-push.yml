@@ -9,12 +9,15 @@ on:
       REF:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
+        required: true
       TAG:
         description: "artifact version tag"
         type: string
+        required: true
       ENVIRONMENT:
         description: "environment"
         type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
