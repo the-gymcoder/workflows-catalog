@@ -61,10 +61,10 @@ jobs:
 
       - name: Scan docker images
         id: scan
+        env:
+          APPS: ${{ inputs.PROJECT_NAME }}
+          TAG: ${{ inputs.TAG }}
         run: |
-          APPS to scan: ${{ inputs.PROJECT_NAME }}
-          APPS="${{ inputs.PROJECT_NAME }}"
-          TAG="${{ inputs.TAG }}"
           echo "Scanning docker images for APPS: $APPS"
           echo "Scanning docker images for TAG: $TAG"
           for app in $APPS; do
