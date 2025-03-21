@@ -54,59 +54,59 @@ jobs:
           echo "APPS_ARRAY length: ${#APPS_ARRAY[@]}"
           if [[ ${#APPS_ARRAY[@]} -eq 1 ]]; then
             cat <<EOF > docker-compose.yml
-version: '3'
-services:
-  ${APPS_ARRAY[0]}:
-    image: ${{ env.IMAGE_REGISTRY }}/${APPS_ARRAY[0]}:${{ inputs.TAG }}
-    entrypoint:
-      - ""
-    command:
-      - /bin/sh
-      - -c
-      - |
-        while true; do
-          echo "Hello world"
-          sleep 60
-EOF
+            version: '3'
+            services:
+              ${APPS_ARRAY[0]}:
+                image: ${{ env.IMAGE_REGISTRY }}/${APPS_ARRAY[0]}:${{ inputs.TAG }}
+                entrypoint:
+                  - ""
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    while true; do
+                      echo "Hello world"
+                      sleep 60
+            EOF
           else
             echo "multiple applications to deploy"
             cat <<EOF > docker-compose.yml
-version: '3'
-services:
-  dr:
-    image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
-    entrypoint:
-      - ""
-    command:
-      - /bin/sh
-      - -c
-      - |
-        while true; do
-          echo "Hello world"
-          sleep 60
-  loki:
-    image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
-    entrypoint:
-      - ""
-    command:
-      - /bin/sh
-      - -c
-      - |
-        while true; do
-          echo "Hello world"
-          sleep 60
-  thor:
-    image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
-    entrypoint:
-      - ""
-    command:
-      - /bin/sh
-      - -c
-      - |
-        while true; do
-          echo "Hello world"
-          sleep 60
-EOF
+            version: '3'
+            services:
+              dr:
+                image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
+                entrypoint:
+                  - ""
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    while true; do
+                      echo "Hello world"
+                      sleep 60
+              loki:
+                image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
+                entrypoint:
+                  - ""
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    while true; do
+                      echo "Hello world"
+                      sleep 60
+              thor:
+                image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
+                entrypoint:
+                  - ""
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    while true; do
+                      echo "Hello world"
+                      sleep 60
+            EOF
           fi
           echo "docker-compose file created"
           cat docker-compose.yml
