@@ -19,9 +19,6 @@ on:
         description: "artifact version tag"
         type: string
         required: true
-      skip_dirs:
-        description: "comma separated list of directories to skip"
-        type: string
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -160,14 +157,16 @@ jobs:
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
         with:
           scan-type: 'fs'
+          scan-ref: '.'
           format: 'template'
           template: '@trivy-pr-comment.tpl'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
           output: 'trivy.json'
           exit-code: 1
-          skip-dirs: ${{ inputs.skip_dirs }}
-          scanners: 'vuln'   
+          skip-dirs: ''
+          scanners: 'vuln'
+          trivy-config: ''
 
       - name: Report vulnerabilities in PR
         if: ${{ github.event_name == 'pull_request' }} && ${{ steps.scan.outcome == 'failure' }}
