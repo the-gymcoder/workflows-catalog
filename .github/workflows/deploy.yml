@@ -48,7 +48,7 @@ jobs:
           version: '3'
           services:
             dr:
-              image: ${{ env.IMAGE_REGISTRY }}/$APP:${{ inputs.TAG }}
+              image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
