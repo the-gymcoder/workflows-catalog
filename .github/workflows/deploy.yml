@@ -51,7 +51,7 @@ jobs:
             echo "deploy application"
             APPS_ARRAY=(${{ inputs.PROJECT_NAME }})
             echo "APPS_ARRAY: ${APPS_ARRAY}"
-            echo "APPS_ARRAY: ${APPS_ARRAY[@]}"
+            echo "APPS_ARRAY: ${#APPS_ARRAY[@]}"
             if ${#APPS_ARRAY[@]} -eq 1; then
               cat <<EOF > docker-compose.yml
               version: '3'
