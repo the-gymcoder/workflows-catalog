@@ -19,11 +19,16 @@ on:
         description: "artifact version tag"
         type: string
         required: true
+      IMAGE_REGISTRY:
+        description: "IMAGE REGISTRY"
+        type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
+
 env:
-  IMAGE_REGISTRY: deenadayalan27
+  IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
 
 jobs:
   trivy-image-scan:

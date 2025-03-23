@@ -68,7 +68,7 @@ jobs:
     secrets: inherit
     needs: 
       - varaibles-parameters
-  
+
   build-loki-project:
     if: contains(inputs.APPS, 'loki')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
@@ -80,12 +80,24 @@ jobs:
     secrets: inherit
     needs: 
       - varaibles-parameters
-  
+
   build-thor-project:
     if: contains(inputs.APPS, 'thor')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       PROJECT_NAME: thor
+      REF: ${{ inputs.REF }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      TAG: ${{ inputs.TAG }}
+    secrets: inherit
+    needs: 
+      - varaibles-parameters
+
+  build-vision-project:
+    if: contains(inputs.APPS, 'vision')
+    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
+    with:
+      PROJECT_NAME: vision
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
