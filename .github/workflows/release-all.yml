@@ -95,18 +95,6 @@ jobs:
     needs: 
       - varaibles-parameters
 
-  build-vision-project:
-    if: contains(inputs.APPS, 'vision')
-    uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
-    with:
-      PROJECT_NAME: vision
-      REF: ${{ inputs.REF }}
-      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-      TAG: ${{ inputs.TAG }}
-    secrets: inherit
-    needs: 
-      - varaibles-parameters
-
   scan-projects:
     uses: the-gymcoder/workflows-catalog/.github/workflows/image-scan.yml@init
     with:
@@ -123,7 +111,6 @@ jobs:
       - build-dr-project
       - build-thor-project
       - build-loki-project
-      - build-vision-project
 
   deploy:
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
@@ -139,7 +126,6 @@ jobs:
       - build-dr-project
       - build-thor-project
       - build-loki-project
-      - build-vision-project
   
   k6-performance-scan:
     runs-on: ubuntu-latest
