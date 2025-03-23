@@ -113,7 +113,8 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
-      PROJECT_NAME: ${{ inputs.APPS }}
+      APPS: ${{ inputs.APPS }}
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
     secrets: inherit
     permissions:
       contents: read

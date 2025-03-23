@@ -3,8 +3,8 @@ name: Trivy scan
 on:
   workflow_call:
     inputs:
-      PROJECT_NAME:
-        description: "project to scan."
+      APPS:
+        description: "APPS to scan."
         type: string
         required: true
       REF:
@@ -69,9 +69,9 @@ jobs:
         run: |
           set +e
           EXIT_CODE=0
-          echo "Scanning docker images for APPS: ${{ inputs.PROJECT_NAME }}"
+          echo "Scanning docker images for APPS: ${{ inputs.APPS }}"
           echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
-          for app in ${{ inputs.PROJECT_NAME }}; do
+          for app in ${{ inputs.APPS }}; do
             app=$(echo "$app" | xargs)
             echo "Scanning $app"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
