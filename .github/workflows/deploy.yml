@@ -14,9 +14,19 @@ on:
         description: "Artifact version tag"
         type: string
         required: true
+      APPS:
+        description: "APPS"
+        type: string
+        required: true
+      CONTAINER_HOST:
+        description: "CONTAINER HOST"
+        type: string
+        required: true
+      IMAGE_REGISTRY:
+        description: "IMAGE REGISTRY"
+        type: string
+        required: true
 
-env:
-  IMAGE_REGISTRY: deenadayalan27
 
 jobs:
   docker-deploy:
@@ -29,9 +39,10 @@ jobs:
           echo "REF: ${{ inputs.REF }}"
           echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
           echo "TAG: ${{ inputs.TAG }}"
-          echo "==== Environment Variables ===="
-          echo "CONTAINER_HOST: ${{ vars.CONTAINER_HOST }}"
-          echo "APPS: ${{ vars.APPS }}"
+          echo "CONTAINER_HOST: ${{ inputs.CONTAINER_HOST }}"
+          echo "APPS: ${{ inputs.APPS }}"
+          echo "IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
+          echo "CONTAINER_HOST: ${{ inputs.CONTAINER_HOST }}"
 
       - name: Check out code
         uses: actions/checkout@v4
@@ -42,13 +53,13 @@ jobs:
         run: |
           set -euo pipefail
           echo "Deploying application(s)..."
-          echo "Generating docker-compose.yml for APP: ${{ vars.APPS }} with TAG: ${{ inputs.TAG }}"
+          echo "Generating docker-compose.yml for APP: ${{ inputs.APPS }} with TAG: ${{ inputs.TAG }}"
 
           cat <<EOF > docker-compose.yml
           version: '3'
           services:
             dr:
-              image: ${{ env.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
+              image: ${{ inputs.IMAGE_REGISTRY }}/dr:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
@@ -60,7 +71,7 @@ jobs:
                     sleep 60
                   done
             loki:
-              image: ${{ env.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
+              image: ${{ inputs.IMAGE_REGISTRY }}/loki:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:
@@ -72,7 +83,7 @@ jobs:
                     sleep 60
                   done
             thor:
-              image: ${{ env.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
+              image: ${{ inputs.IMAGE_REGISTRY }}/thor:${{ inputs.TAG }}
               entrypoint:
                 - ""
               command:

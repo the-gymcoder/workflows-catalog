@@ -37,13 +37,6 @@ jobs:
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"
             echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
-            echo "var APPS: ${{ vars.APPS }}"
-
-      - name: Exit if project not in apps
-        run: |
-          echo "Project ${{ inputs.PROJECT_NAME }} not in apps  ${{ vars.APPS }}"
-          exit 1
-        if: (! contains(vars.APPS, inputs.PROJECT_NAME))
 
       - name: Check out code
         uses: actions/checkout@v4

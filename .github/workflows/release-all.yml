@@ -18,6 +18,14 @@ on:
         description: "APPS"
         type: string
         required: true
+      CONTAINER_HOST:
+        description: "CONTAINER_HOST"
+        type: string
+        required: true
+      IMAGE_REGISTRY:
+        description: "IMAGE_REGISTRY"
+        type: string
+        required: true
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
@@ -33,11 +41,6 @@ jobs:
           echo "input TAG: ${{ inputs.TAG }}"
           echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
           echo "input APPS: ${{ inputs.APPS }}"
-      - name: Exit if APPS not in apps
-        run: |
-          echo "APPS ${{ inputs.APPS }} not in apps  ${{ vars.APPS }}"
-          exit 1
-        if: (! contains(vars.APPS, inputs.APPS))
       - name: pull-request trigger
         if: github.event_name == 'pull_request'
         run: |
@@ -55,6 +58,7 @@ jobs:
           echo "workflow_dispatch trigger"
 
   build-dr-project:
+    if: contains(inputs.APPS, 'dr')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       PROJECT_NAME: dr
@@ -66,6 +70,7 @@ jobs:
       - varaibles-parameters
   
   build-loki-project:
+    if: contains(inputs.APPS, 'loki')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       PROJECT_NAME: loki
@@ -77,6 +82,7 @@ jobs:
       - varaibles-parameters
   
   build-thor-project:
+    if: contains(inputs.APPS, 'thor')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       PROJECT_NAME: thor
@@ -109,6 +115,9 @@ jobs:
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
+      APPS: ${{ inputs.APPS }}
+      CONTAINER_HOST: ${{ inputs.CONTAINER_HOST }}
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
     secrets: inherit
     needs: 
       - build-dr-project
