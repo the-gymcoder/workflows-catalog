@@ -139,6 +139,7 @@ jobs:
       - build-dr-project
       - build-thor-project
       - build-loki-project
+      - build-vision-project
   
   k6-performance-scan:
     runs-on: ubuntu-latest
