@@ -123,6 +123,7 @@ jobs:
       - build-dr-project
       - build-thor-project
       - build-loki-project
+      - build-vision-project
 
   deploy:
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
