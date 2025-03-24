@@ -74,11 +74,11 @@ jobs:
           echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
           for app in ${{ inputs.APPS }}; do
             app=$(echo "$app" | xargs)
-            echo "Scanning $app"
+            echo "Scanning ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }}"
             trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/trivy-pr-comment.tpl" --no-progress ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }} >> trivy.json
             
             if [[ $? -ne 0 ]]; then
-              echo "Trivy scan failed for $app"
+              echo "Trivy scan failed for ${IMAGE_REGISTRY}/${app}:${{ inputs.TAG }}"
               EXIT_CODE=1
             fi
           done
