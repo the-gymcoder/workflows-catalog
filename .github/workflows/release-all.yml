@@ -49,7 +49,6 @@ jobs:
           echo "input IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
           echo "input VARIABLES_JSON: ${{ inputs.VARIABLES_JSON }}"
           echo "input JSON team: $(echo '${{ inputs.VARIABLES_JSON }}' | jq -r '.variables.team')"
-          echo "input JSON team: ${{ fromJSON(inputs.VARIABLES_JSON.team) }}"
       - name: pull-request trigger
         if: github.event_name == 'pull_request'
         run: |
@@ -70,7 +69,7 @@ jobs:
     if: contains(inputs.APPS, 'dr')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
-      PROJECT_NAME: dr
+      PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).dr }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
