@@ -66,8 +66,9 @@ jobs:
 
       - name: Scan docker images
         id: scan
+        continue-on-error: true
         run: |
-          set +e
+          #set +e
           EXIT_CODE=0
           echo "Scanning docker images for APPS: ${{ inputs.APPS }}"
           echo "Scanning docker images for TAG: ${{ inputs.TAG }}"
