@@ -69,7 +69,7 @@ jobs:
     if: contains(inputs.APPS, 'dr')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
-      PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON.varaibles.dr) }}
+      PROJECT_NAME: $(echo '${{ inputs.VARIABLES_JSON }}' | jq -r '.variables.dr')"
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
