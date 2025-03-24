@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - name: Set up env
+      - name: Echo variables and parameters
         run: |
           echo "input REF: ${{ inputs.REF }}"
           echo "input TAG: ${{ inputs.TAG }}"
@@ -48,6 +48,7 @@ jobs:
           echo "input CONTAINER_HOST: ${{ inputs.CONTAINER_HOST }}"
           echo "input IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
           echo "input VARIABLES_JSON: ${{ inputs.VARIABLES_JSON }}"
+          echo "input JSON team: ${{ inputs.VARIABLES_JSON.varaibles.team }}"
       - name: pull-request trigger
         if: github.event_name == 'pull_request'
         run: |
