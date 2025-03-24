@@ -48,7 +48,7 @@ jobs:
           echo "input CONTAINER_HOST: ${{ inputs.CONTAINER_HOST }}"
           echo "input IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
           echo "input VARIABLES_JSON: ${{ inputs.VARIABLES_JSON }}"
-          echo "input JSON team: ${{ fromJSON(inputs.VARIABLES_JSON).variables }}"
+          echo "input JSON team: $(echo '${{ inputs.VARIABLES_JSON }}' | jq '.variables.team')"
       - name: pull-request trigger
         if: github.event_name == 'pull_request'
         run: |
