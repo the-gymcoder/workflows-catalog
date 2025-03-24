@@ -108,7 +108,7 @@ jobs:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
       APPS: ${{ inputs.APPS }}
-      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}"
+      IMAGE_REGISTRY: ${{ inputs.IMAGE_REGISTRY }}
     secrets: inherit
     permissions:
       contents: read
