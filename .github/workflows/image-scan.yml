@@ -3,6 +3,10 @@ name: Trivy scan
 on:
   workflow_call:
     inputs:
+      RUNS_ON:
+        description: runner tag or runner group
+        type: string
+        required: true
       APPS:
         description: "APPS to scan."
         type: string
@@ -32,7 +36,7 @@ env:
 
 jobs:
   trivy-image-scan:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}
     environment: ${{ inputs.ENVIRONMENT }}
     container:
       image: docker:stable

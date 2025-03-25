@@ -2,6 +2,10 @@ name: Build microservice/project
 on:
   workflow_call:
     inputs:
+      RUNS_ON:
+        description: runner tag or runner group
+        type: string
+        required: true
       PROJECT_NAME:
         description: "project to build docker image and push."
         type: string
@@ -24,7 +28,7 @@ on:
 
 jobs:
   docker-build-push:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}"
     environment: ${{ inputs.ENVIRONMENT }}
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
@@ -33,6 +37,7 @@ jobs:
         run: |
             #!/usr/bin/env bash
             set -euo pipefail
+            echo "input RUNS_ON: ${{ inputs.RUNS_ON }}"
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"

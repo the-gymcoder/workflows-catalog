@@ -2,6 +2,10 @@ name: Deploy microservice/project
 on:
   workflow_call:
     inputs:
+      RUNS_ON:
+        description: runner tag or runner group
+        type: string
+        required: true
       REF:
         description: "Branch, tag, or commit SHA from which the project should be built."
         type: string
@@ -30,12 +34,13 @@ on:
 
 jobs:
   docker-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Display Inputs and Environment Variables
         run: |
           set -euo pipefail
+          echo "input RUNS_ON: ${{ inputs.RUNS_ON }}"
           echo "REF: ${{ inputs.REF }}"
           echo "ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
           echo "TAG: ${{ inputs.TAG }}"

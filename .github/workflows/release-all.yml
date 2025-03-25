@@ -2,6 +2,10 @@ name: Build Deploy Scan and Performance test microservices/project
 on:
   workflow_call:
     inputs:
+      RUNS_ON:
+        type: string
+        required: true
+        description: runner tag or runner group
       REF:
         type: string
         required: true
@@ -36,11 +40,12 @@ on:
 
 jobs:
   varaibles-parameters:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}"
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Echo variables and parameters
         run: |
+          echo "input RUNS_ON: ${{ inputs.RUNS_ON }}"
           echo "input REF: ${{ inputs.REF }}"
           echo "input TAG: ${{ inputs.TAG }}"
           echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
@@ -69,6 +74,7 @@ jobs:
     if: contains(inputs.APPS, 'dr')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
+      RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: ${{ toJSON(inputs.VARIABLES_JSON.varaibles.dr) }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
@@ -81,6 +87,7 @@ jobs:
     if: contains(inputs.APPS, 'loki')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
+      RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: loki
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
@@ -93,6 +100,7 @@ jobs:
     if: contains(inputs.APPS, 'thor')
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
+      RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: thor
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
@@ -104,6 +112,7 @@ jobs:
   scan-projects:
     uses: the-gymcoder/workflows-catalog/.github/workflows/image-scan.yml@init
     with:
+      RUNS_ON: ${{ inputs.RUNS_ON }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
@@ -121,6 +130,7 @@ jobs:
   deploy:
     uses: the-gymcoder/workflows-catalog/.github/workflows/deploy.yml@init
     with:
+      RUNS_ON: ${{ inputs.RUNS_ON }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
@@ -134,7 +144,7 @@ jobs:
       - build-loki-project
   
   k6-performance-scan:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
