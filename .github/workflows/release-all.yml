@@ -72,7 +72,7 @@ jobs:
           echo "workflow_dispatch trigger"
 
   build-dr-project:
-    if: contains(inputs.APPS, 'dr')
+    if: contains(inputs.APPS, fromJSON(inputs.VARIABLES_JSON).variables.dr)
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
@@ -85,11 +85,11 @@ jobs:
       - varaibles-parameters
 
   build-loki-project:
-    if: contains(inputs.APPS, 'loki')
+    if: contains(inputs.APPS, fromJSON(inputs.VARIABLES_JSON).variables.loki)
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
-      PROJECT_NAME: loki
+      PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).variables.loki }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
@@ -98,11 +98,11 @@ jobs:
       - varaibles-parameters
 
   build-thor-project:
-    if: contains(inputs.APPS, 'thor')
+    if: contains(inputs.APPS, fromJSON(inputs.VARIABLES_JSON).variables.thor)
     uses: the-gymcoder/workflows-catalog/.github/workflows/build-push.yml@init
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
-      PROJECT_NAME: thor
+      PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).variables.thor }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
