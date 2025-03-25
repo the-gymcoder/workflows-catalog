@@ -14,6 +14,10 @@ on:
         description: "branch, tag, or commit SHA from which the project should be build."
         type: string
         required: true
+      REPO:
+        description: "source repo"
+        type: string
+        required: true
       TAG:
         description: "artifact version tag"
         type: string
@@ -39,6 +43,7 @@ jobs:
             set -euo pipefail
             echo "input RUNS_ON: ${{ inputs.RUNS_ON }}"
             echo "input PROJECT_NAME: ${{ inputs.PROJECT_NAME }}"
+            echo "input REPO: ${{ inputs.REPO }}"
             echo "input REF: ${{ inputs.REF }}"
             echo "input TAG: ${{ inputs.TAG }}"
             echo "input ENVIRONMENT: ${{ inputs.ENVIRONMENT }}"
@@ -46,7 +51,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          ref: "${{ inputs.REF }}"
+          repository: ${{ inputs.REPO }}
+          ref: ${{ inputs.REF }}
 
       - name: Login to dockerhub
         uses: docker/login-action@v3

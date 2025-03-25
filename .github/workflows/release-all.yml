@@ -77,6 +77,7 @@ jobs:
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).variables.dr }}
+      REPO: ${{ fromJSON(inputs.VARIABLES_JSON).variables.source_repo }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
@@ -90,6 +91,7 @@ jobs:
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).variables.loki }}
+      REPO: ${{ fromJSON(inputs.VARIABLES_JSON).variables.source_repo }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
@@ -103,6 +105,7 @@ jobs:
     with:
       RUNS_ON: ${{ inputs.RUNS_ON }}
       PROJECT_NAME: ${{ fromJSON(inputs.VARIABLES_JSON).variables.thor }}
+      REPO: ${{ fromJSON(inputs.VARIABLES_JSON).variables.source_repo }}
       REF: ${{ inputs.REF }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       TAG: ${{ inputs.TAG }}
