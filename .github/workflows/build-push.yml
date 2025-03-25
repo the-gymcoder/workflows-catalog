@@ -28,7 +28,7 @@ on:
 
 jobs:
   docker-build-push:
-    runs-on: ${{ inputs.RUNS_ON }}"
+    runs-on: ${{ inputs.RUNS_ON }}
     environment: ${{ inputs.ENVIRONMENT }}
     outputs:
       IMAGE: ${{ steps.build.outputs.IMAGE }}
