@@ -40,7 +40,7 @@ on:
 
 jobs:
   varaibles-parameters:
-    runs-on: ${{ inputs.RUNS_ON }}"
+    runs-on: ${{ inputs.RUNS_ON }}
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Echo variables and parameters
